@@ -1,4 +1,6 @@
 .DS_Store
 .idea/
 input/
-!demo-postgis/input/
+demo-postgis/input/*.zip
+!demo-postgis/input/arrondissements.zip
+!demo-postgis/input/emplacement-des-gares-idf.zip

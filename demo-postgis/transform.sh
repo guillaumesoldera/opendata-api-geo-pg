@@ -47,3 +47,19 @@ mlr --icsv --ifs ';' --ocsv --ofs ';' cut -o -f gares_id,nom_long,nom,mode,ligne
   $geom_latlon = "SRID=4326; ". $geom_latlon .""
 ' | mlr --icsv --ifs ';' --ocsv --ofs ';' filter '$geom_latlon != "SRID=4326; "' > emplacement-des-gares-idf_transformed.csv
 
+
+unzip espaces_verts.zip
+
+for i in $(ls *.shp)
+do
+  fileName=$(basename $i)
+  realFileName="${fileName%.*}"
+  echo "Transform to CSV"
+  ogr2ogr -t_srs EPSG:4326 -f CSV $realFileName.csv $i -lco GEOMETRY=AS_WKT -lco SEPARATOR=SEMICOLON -lco GEOMETRY_NAME=geom_latlon -lco CREATE_CSVT=YES
+done
+
+echo "Transform file"
+mlr --icsv --ifs ';' --ocsv --ofs ';' cut -o -f nsq_espace_,nom_ev,type_ev,categorie,geom_latlon espaces_verts.csv | mlr --icsv --ifs ';' --ocsv --ofs ';' put '
+  $geom_latlon = "SRID=4326; ". $geom_latlon .""
+' | mlr --icsv --ifs ';' --ocsv --ofs ';' filter '$geom_latlon != "SRID=4326; "' > espaces_verts_transformed.csv
+

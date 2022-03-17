@@ -16,3 +16,11 @@ CREATE TABLE gares(
     exploitant TEXT NOT NULL,
     geom_latlon geometry NOT NULL
 );
+
+CREATE TABLE espaces_verts(
+    nsq_espace_ numeric not null PRIMARY KEY,
+    nom_ev TEXT NOT NULL,
+    type_ev TEXT NOT NULL,
+    categorie TEXT NOT NULL,
+    geom_latlon geometry NOT NULL
+);

@@ -139,3 +139,23 @@ SELECT json_build_object(
                'features', json_agg(f.feature::json)
            )
 FROM features f;
+
+
+-- INDEX
+-- espaces verts qui intersectent plusieurs arrondissements (env. 400ms)
+with espaces_verts_with_arr AS (
+    select distinct ev.nom_ev, c_ar
+    from espaces_verts ev
+             inner join arrondissements a ON ST_Intersects(ev.geom_latlon, a.geom_latlon)
+)
+select ev.nom_ev, count(*)
+from espaces_verts_with_arr ev
+group by ev.nom_ev
+having count(*) > 1
+
+-- montrer le plan d'exécution
+
+-- création de l'index
+CREATE INDEX espaces_verts_geom_latlon_idx ON espaces_verts USING gist (geom_latlon);
+-- réexécution de la requête sur les espaces verts qui intersectent plusieurs arrondissements (env. 70ms)
+
