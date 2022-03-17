@@ -1,0 +1,1 @@
+CREATE INDEX arrondissements_geom_latlon_idx ON arrondissements USING gist (geom_latlon);
