@@ -142,7 +142,7 @@ FROM features f;
 
 
 -- INDEX
--- espaces verts qui intersectent plusieurs arrondissements (env. 400ms)
+-- espaces verts qui intersectent plusieurs arrondissements (25 résultats env. 400ms)
 with espaces_verts_with_arr AS (
     select distinct ev.nom_ev, c_ar
     from espaces_verts ev
@@ -151,11 +151,70 @@ with espaces_verts_with_arr AS (
 select ev.nom_ev, count(*)
 from espaces_verts_with_arr ev
 group by ev.nom_ev
-having count(*) > 1
+having count(*) > 1;
+
+
+-- demo avec overlap (1106 résultats en env. 80ms)
+with espaces_verts_with_arr AS (
+    select distinct ev.nom_ev, c_ar
+    from espaces_verts ev
+             inner join arrondissements a ON ev.geom_latlon && a.geom_latlon
+)
+select ev.nom_ev, count(*)
+from espaces_verts_with_arr ev
+group by ev.nom_ev
+having count(*) > 1;
+
 
 -- montrer le plan d'exécution
 
 -- création de l'index
 CREATE INDEX espaces_verts_geom_latlon_idx ON espaces_verts USING gist (geom_latlon);
 -- réexécution de la requête sur les espaces verts qui intersectent plusieurs arrondissements (env. 70ms)
+
+
+-- voir les résultats sur geojson.io
+with features AS (
+    select ST_AsGeoJSON(a.*) as feature
+    from (
+             SELECT arr.*, '#0000FF' as fill
+             from arrondissements arr
+             inner join espaces_verts ev ON ST_Intersects(ev.geom_latlon,arr.geom_latlon)
+             where ev.nom_ev = 'JARDINIERES DE LA PLACE DE CLICHY'
+         ) a
+    UNION
+    select ST_AsGeoJSON(ev.*) as feature
+    from (
+             select e.*, '#00FF00' as fill
+             from espaces_verts e
+             where nom_ev = 'JARDINIERES DE LA PLACE DE CLICHY'
+         ) ev
+)
+SELECT json_build_object(
+               'type', 'FeatureCollection',
+               'features', json_agg(f.feature::json)
+           )
+FROM features f;
+
+with features AS (
+    select ST_AsGeoJSON(a.*) as feature
+    from (
+             SELECT arr.*, '#0000FF' as fill
+             from arrondissements arr
+                      inner join espaces_verts ev ON ev.geom_latlon && arr.geom_latlon
+             where ev.nom_ev = '00-00'
+         ) a
+    UNION
+    select ST_AsGeoJSON(ev.*) as feature
+    from (
+             select e.*, '#00FF00' as fill
+             from espaces_verts e
+             where nom_ev = '00-00'
+         ) ev
+)
+SELECT json_build_object(
+               'type', 'FeatureCollection',
+               'features', json_agg(f.feature::json)
+           )
+FROM features f;
 
