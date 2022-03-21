@@ -1,0 +1,20 @@
+
+SELECT ST_Distance(
+    'SRID=4326;POINT(2.282412153722246 48.878653091848705)'::geography,
+    'SRID=4326;POINT(2.2824121537 48.8786530918)'::geography
+) as precision_10;
+
+SELECT ST_Distance(
+   'SRID=4326;POINT(2.282412153722246 48.878653091848705)'::geography,
+   'SRID=4326;POINT(2.28241 48.87865)'::geography
+) as precision_5;
+
+SELECT ST_Distance(
+   'SRID=4326;POINT(2.282412153722246 48.878653091848705)'::geography,
+   'SRID=4326;POINT(2.2824 48.8786)'::geography
+) as precision_4;
+
+SELECT ST_Distance(
+   'SRID=4326;POINT(2.282412153722246 48.878653091848705)'::geography,
+   'SRID=4326;POINT(2.282 48.878)'::geography
+) as precision_3;
