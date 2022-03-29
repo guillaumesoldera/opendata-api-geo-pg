@@ -1,0 +1,8 @@
+{
+  "name": "demo-devoxx-pprn",
+  "version": "1.0.0",
+  "dependencies": {
+    "csv-parser": "2.3.5",
+    "stream-json": "1.7.1"
+  }
+}
