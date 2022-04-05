@@ -25,6 +25,26 @@ SELECT json_build_object(
 from arrondissements a;
 
 
+-- ST_Envelope
+SELECT ST_AsGeoJSON(ST_Envelope(geom_latlon))
+from arrondissements
+where c_ar = '17';
+
+with features AS (
+    SELECT ST_Envelope(geom_latlon) as feature, '#000000' as fill
+    from arrondissements
+    where c_ar = '17'
+    UNION
+    SELECT geom_latlon as feature, '#FFFFFF' as fill
+    from arrondissements
+    where c_ar = '17'
+)
+SELECT json_build_object(
+               'type', 'FeatureCollection',
+               'features', json_agg(ST_AsGeoJSON(f.*)::json)
+           )
+from features f;
+
 
 -- ST_Distance
 -- distance des stations de métro depuis le palais des congrès
@@ -175,7 +195,7 @@ CREATE INDEX espaces_verts_geom_latlon_idx ON espaces_verts USING gist (geom_lat
 
 -- voir les résultats sur geojson.io
 with features AS (
-    select ST_AsGeoJSON(a.*) as feature
+    select ST_AsGeoJSON(a.*) as feature, 1 as orderIdx
     from (
              SELECT arr.*, '#0000FF' as fill
              from arrondissements arr
@@ -183,12 +203,13 @@ with features AS (
              where ev.nom_ev = 'JARDINIERES DE LA PLACE DE CLICHY'
          ) a
     UNION
-    select ST_AsGeoJSON(ev.*) as feature
+    select ST_AsGeoJSON(ev.*) as feature, 2 as orderIdx
     from (
              select e.*, '#00FF00' as fill
              from espaces_verts e
              where nom_ev = 'JARDINIERES DE LA PLACE DE CLICHY'
          ) ev
+    order by orderIdx
 )
 SELECT json_build_object(
                'type', 'FeatureCollection',
@@ -196,21 +217,32 @@ SELECT json_build_object(
            )
 FROM features f;
 
-with features AS (
-    select ST_AsGeoJSON(a.*) as feature
-    from (
-             SELECT arr.*, '#0000FF' as fill
-             from arrondissements arr
-                      inner join espaces_verts ev ON ev.geom_latlon && arr.geom_latlon
-             where ev.nom_ev = '00-00'
-         ) a
+
+
+
+with tmp_arr AS (
+    SELECT arr.*, '#' || rpad(floor(random()*(999999+1))::text, 6, '0') as fill
+    from arrondissements arr
+    inner join espaces_verts ev ON ev.geom_latlon && arr.geom_latlon
+    where ev.nom_ev = '00-00'
+),
+ features AS (
+    select ST_AsGeoJSON(a.*) as feature, 1 as orderIdx
+    from tmp_arr a
     UNION
-    select ST_AsGeoJSON(ev.*) as feature
+    SELECT ST_AsGeoJSON(bb.*) as feature, 0 as orderIdx
+    FROM (
+        SELECT ST_Envelope(geom_latlon), fill as stroke
+        FROM tmp_arr
+    ) bb
+    UNION
+    select ST_AsGeoJSON(ev.*) as feature, 2 as orderIdx
     from (
              select e.*, '#00FF00' as fill
              from espaces_verts e
              where nom_ev = '00-00'
          ) ev
+    order by orderIdx
 )
 SELECT json_build_object(
                'type', 'FeatureCollection',
@@ -218,3 +250,18 @@ SELECT json_build_object(
            )
 FROM features f;
 
+
+SELECT
+    ST_Distance(
+            ST_GeographyFromText('Point(-118.4079 33.9434)'), -- LAX
+            ST_GeographyFromText('Point(139.733 35.567)'))    -- NRT (Tokyo/Narita)
+        AS geography_distance,
+    ST_DistanceSphere(
+            ST_GeometryFromText('Point(-118.4079 33.9434)'),  -- LAX
+            ST_GeometryFromText('Point(139.733 35.567)'))     -- NRT (Tokyo/Narita)
+        AS geometry_distance_sphere,
+    ST_DistanceSpheroid(
+            ST_GeometryFromText('Point(-118.4079 33.9434)'),  -- LAX
+            ST_GeometryFromText('Point(139.733 35.567)'),     -- NRT (Tokyo/Narita)
+            'SPHEROID["WGS 84",6378137,298.257223563]')
+        AS geometry_distance_spheroid;
