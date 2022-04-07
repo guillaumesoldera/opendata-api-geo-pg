@@ -14,7 +14,7 @@ public abstract class BaseController {
      * @param response la réponse HTTP à compléter.
      * @return le payload JSON de la réponse HTTP, contenant le message "Not Found".
      */
-    public static String notFound(HttpServletResponse response) {
+    public String notFound(HttpServletResponse response) {
         response.setStatus(HttpStatus.NOT_FOUND.value());
         return "{ \"message\": \"Not Found\" }";
     }
@@ -27,7 +27,7 @@ public abstract class BaseController {
      * @param response la réponse HTTP à compléter.
      * @return le payload de la réponse HTTP ou bien un message "Not Found" si le contenu est vide.
      */
-    public static String processOptionalString(Optional<String> strOpt, HttpServletResponse response) {
+    public String processOptionalString(Optional<String> strOpt, HttpServletResponse response) {
         if (strOpt.isPresent()) {
             response.setStatus(HttpStatus.OK.value());
             return strOpt.get();
@@ -41,7 +41,7 @@ public abstract class BaseController {
      * La réponse HTTP est "200 - OK" si le contenu est présent, et "404 - Nout Found" si le contenu est vide.
      *
      * @param jsonableOpt le contenu optionnel.
-     * @param response la réponse HTTP à compléter.
+     * @param response    la réponse HTTP à compléter.
      * @return le payload JSON de la réponse HTTP ou bien un message "Not Found" si le contenu est vide.
      */
     public String processOptionalJsonable(Optional<? extends Jsonable> jsonableOpt, HttpServletResponse response) {
