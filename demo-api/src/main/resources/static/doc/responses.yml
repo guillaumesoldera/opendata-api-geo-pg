@@ -1,0 +1,10 @@
+components:
+  responses:
+    Unauthorized:
+      description: Unauthorized - vous n'êtes pas autorisé à appeler cette API.
+    BadRequest:
+      description: BadRequest - les paramètres d'appel de l'API ne sont pas corrects.
+    NotFound:
+      description: NotFound - ressource non trouvée.
+    InternalServerError:
+      description: InternalServerError - erreur technique imprévue, contactez le support.

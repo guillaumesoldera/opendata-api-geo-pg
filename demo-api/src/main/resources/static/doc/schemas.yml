@@ -1,0 +1,56 @@
+components:
+  schemas:
+    DataProvider:
+      description: Fournisseur de données.
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifiant unique du fournisseur de données.
+          example: "insee"
+        name:
+          type: string
+          description: Nom du fournisseur de données.
+          example: "Insee"
+        url:
+          type: string
+          description: URL du fournisseur de données.
+          example: "https://www.insee.fr"
+        description:
+          type: string
+          description: Description du fournisseur de données.
+          example: "Institut national de la statistique et des études économiques"
+      required:
+        - id
+        - name
+    DataSource:
+      description: Source de données.
+      type: object
+      properties:
+        id:
+          type: string
+          description: Identifiant unique de la source de données.
+          example: "insee-cog"
+        name:
+          type: string
+          description: Nom de la source de données.
+          example: "Code officiel géographique de l'Insee"
+        url:
+          type: string
+          description: URL de la source de données.
+          example: "https://www.insee.fr/fr/information/5057840"
+        description:
+          type: string
+          description: Description de la source de données.
+          example: "Code officiel géographique au 1er janvier 2021"
+        publication_date:
+          type: string
+          format: date
+          description: Date de publication de la source de données.
+          example: "2021-03-19"
+        provider:
+          $ref: '#/components/schemas/DataProvider'
+      required:
+        - id
+        - name
+        - provider

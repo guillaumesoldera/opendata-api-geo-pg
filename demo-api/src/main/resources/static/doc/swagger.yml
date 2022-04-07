@@ -1,0 +1,106 @@
+openapi: 3.0.0
+
+info:
+  title: API Demo
+  description: Démo des APIs géographiques
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api
+    description: Serveur local
+
+paths:
+  /v1/data/providers:
+    get:
+      summary: Liste des fournisseurs de données.
+      tags:
+        - Data
+      security:
+        - BasicAuth: [ ]
+      responses:
+        '200':
+          description: OK - Retourne les fournisseurs de données.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas.yml#/components/schemas/DataProvider'
+        '401':
+          $ref: 'responses.yml#/components/responses/Unauthorized'
+        '500':
+          $ref: 'responses.yml#/components/responses/InternalServerError'
+  /v1/data/providers/{id}:
+    get:
+      summary: Détail d'un fournisseur de données.
+      tags:
+        - Data
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: identifiant unique du fournisseur de données.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK - Retourne le détail du fournisseur de données.
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yml#/components/schemas/DataProvider'
+        '401':
+          $ref: 'responses.yml#/components/responses/Unauthorized'
+        '404':
+          $ref: 'responses.yml#/components/responses/NotFound'
+        '500':
+          $ref: 'responses.yml#/components/responses/InternalServerError'
+  /v1/data/sources:
+    get:
+      summary: Liste des sources de données.
+      tags:
+        - Data
+      security:
+        - BasicAuth: [ ]
+      responses:
+        '200':
+          description: OK - Retourne les sources de données.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas.yml#/components/schemas/DataSource'
+        '401':
+          $ref: 'responses.yml#/components/responses/Unauthorized'
+        '500':
+          $ref: 'responses.yml#/components/responses/InternalServerError'
+  /v1/data/sources/{id}:
+    get:
+      summary: Détail d'une source de données.
+      tags:
+        - Data
+      security:
+        - BasicAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: identifiant unique de la source de données.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK - Retourne le détail de la source de données.
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas.yml#/components/schemas/DataSource'
+        '401':
+          $ref: 'responses.yml#/components/responses/Unauthorized'
+        '404':
+          $ref: 'responses.yml#/components/responses/NotFound'
+        '500':
+          $ref: 'responses.yml#/components/responses/InternalServerError'
