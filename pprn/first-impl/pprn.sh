@@ -1,18 +1,19 @@
 #!/bin/sh
-#mkdir output
-#mkdir input
-#status_code=$(curl --write-out %{http_code} --silent --output /dev/null https://files.georisques.fr/ppr/pprn_17.zip)
-#if [[ "$status_code" -ne 200 ]]
-#then
-#  echo "No files for $i"
-#else
-#  curl https://files.georisques.fr/ppr/pprn_17.zip -o input/pprn_17.zip
-#fi
+mkdir input
+mkdir output
+status_code=$(curl --write-out %{http_code} --silent --output /dev/null https://files.georisques.fr/ppr/pprn_17.zip)
+if [[ "$status_code" -ne 200 ]]
+then
+  echo "No files for $i"
+else
+  curl https://files.georisques.fr/ppr/pprn_17.zip -o input/pprn_17.zip
+fi
 
 cd input
-#unzip pprn_17.zip
+unzip pprn_17.zip
 
 cd ..
+npm install
 echo "start $(date)"
 echo "start SQL generation"
 echo "BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;" > output/document_pprn_17.sql
@@ -34,7 +35,7 @@ echo "COMMIT TRANSACTION;" >> output/zone_pprn_17.sql
 echo "end SQL generation ${date}"
 
 export PGPASSWORD=demopostgis
-export pg_cmd_base="psql -h 192.168.86.52 -p 5400 -U postgres -d demo_devoxx"
+export pg_cmd_base="psql -h localhost -p 5432 -d demo_postgis -U demo_postgis_user"
 
 echo "creation schemas ${date}"
 file=../schemas/up.sql
