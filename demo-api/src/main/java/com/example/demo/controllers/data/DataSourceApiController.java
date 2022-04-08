@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class DataSourceApiController extends BaseController {
@@ -27,16 +26,16 @@ public class DataSourceApiController extends BaseController {
 
     @GetMapping(path = "/api/v1/data/sources", produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public CompletableFuture<String> all() {
-        CompletableFuture<List<DataSource>> dataSourceListFuture = dataSourceRepository.findAll();
-        return dataSourceListFuture.thenApply(dataSourceList -> JsonUtils.toJsonArray(dataSourceList).toString());
+    public String all() {
+        List<DataSource> dataSourceList = dataSourceRepository.findAll();
+        return JsonUtils.toJsonArray(dataSourceList).toString();
     }
 
     @GetMapping(path = "/api/v1/data/sources/{id}", produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public CompletableFuture<String> byId(@PathVariable String id, HttpServletResponse response) {
-        CompletableFuture<Optional<DataSource>> dataSourceOptFuture = dataSourceRepository.findById(id);
-        return dataSourceOptFuture.thenApply(dataSourceOpt -> processOptionalJsonable(dataSourceOpt, response));
+    public String byId(@PathVariable String id, HttpServletResponse response) {
+        Optional<DataSource> dataSourceOpt = dataSourceRepository.findById(id);
+        return processOptionalJsonable(dataSourceOpt, response);
     }
 
 }
