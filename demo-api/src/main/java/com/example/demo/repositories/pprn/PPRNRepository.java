@@ -38,30 +38,20 @@ public class PPRNRepository {
     }
 
     public byte[] tileFor(TilePath tilePath) {
-        TilePath.Envelope envelope = tilePath.tileToEnvelope();
-        String sql = "WITH\n" +
-                "envelope AS (\n" +
-                "    SELECT ST_Segmentize(ST_MakeEnvelope(:xmin, :ymin, :xmax, :ymax, 3857),:segSize) as env\n" +
-                "  ),\n" +
-                "bounds AS (\n" +
-                "  SELECT e.env AS geom, e.env::box2d AS b2d\n" +
-                "    FROM envelope e\n" +
-                "  ),\n" +
-                "  mvtgeom AS (\n" +
-                "    SELECT ST_AsMVTGeom(ST_Transform(t.area, 3857), bounds.b2d) AS geom, \n" +
-                "    t.nom, rtr.code, rtr.color\n" +
-                "    FROM zone_pprn t \n" +
-                "    INNER JOIN bounds ON ST_Intersects(t.area, ST_Transform(bounds.geom, 4326)) " +
-                "    INNER JOIN ref_typereg rtr ON t.typereg = rtr.code " +
-                "  ) \n" +
-                "SELECT ST_AsMVT(mvtgeom.*, 'pprn') FROM mvtgeom";
+        String sql = "WITH mvtgeom AS " +
+                "( " +
+                "  SELECT ST_AsMVTGeom(t.area, ST_Transform(ST_TileEnvelope(:zoom, :x, :y), 4326), extent => 4096, buffer => 64) AS geom, rtr.code, rtr.color " +
+                "  FROM zone_pprn t " +
+                "  INNER JOIN ref_typereg rtr ON t.typereg = rtr.code " +
+                "  WHERE t.area && ST_Transform(ST_TileEnvelope(:zoom, :x, :y, margin => (64.0 / 4096)), 4326) " +
+                ") " +
+                "SELECT ST_AsMVT(mvtgeom.*, 'pprn') " +
+                "FROM mvtgeom;";
 
         SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("xmin", envelope.xmin)
-                .addValue("ymin", envelope.ymin)
-                .addValue("xmax", envelope.xmax)
-                .addValue("ymax", envelope.ymax)
-                .addValue("segSize", envelope.segmentSize());
+                .addValue("zoom", tilePath.zoom)
+                .addValue("x", tilePath.x)
+                .addValue("y", tilePath.y);
         return template.queryForObject(sql, param, (rs, rowNum) -> rs.getBytes(1));
 
     }
