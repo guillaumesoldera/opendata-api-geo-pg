@@ -27,11 +27,15 @@ public class PPRNApiController extends BaseController {
     @GetMapping(path = "/api/v1/risques/pprn/zones", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public String byLatLon(
+            @RequestParam("codeInsee") Optional<String> codeInseeOpt,
             @RequestParam("lat") Optional<Double> latOpt,
             @RequestParam("lon") Optional<Double> lonOpt,
             HttpServletResponse response
     ) {
-        if (latOpt.isPresent() && lonOpt.isPresent()) {
+        if (codeInseeOpt.filter(c -> !c.isBlank()).isPresent()) {
+            List<ZonePPRN> zones = pprnRepository.zonesFor(codeInseeOpt.get().trim());
+            return JsonUtils.toGeoJsonFeatureCollection(zones).toString();
+        } else if (latOpt.isPresent() && lonOpt.isPresent()) {
             List<ZonePPRN> zones = pprnRepository.zonesFor(latOpt.get(), lonOpt.get());
             return JsonUtils.toGeoJsonFeatureCollection(zones).toString();
         } else {

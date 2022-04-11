@@ -37,6 +37,20 @@ public class PPRNRepository {
         return template.query(sql, param, zonePPRNRowMapper);
     }
 
+    public List<ZonePPRN> zonesFor(String codeInsee) {
+        String sql = "" +
+                "WITH contour_code_insee AS (SELECT contour FROM commune_contour WHERE com=:codeInsee) " +
+                "SELECT id_zone, id_gaspar, nom, codezone, r.code as typereg_code, r.label as typereg_label, r.color as typereg_color, urlfic, ST_AsGeoJSON(area)::text as jsonArea " +
+                "FROM  zone_pprn z " +
+                "LEFT JOIN ref_typereg r ON z.typereg = r.code " +
+                "INNER JOIN contour_code_insee cci ON ST_Intersects(area, cci.contour) " +
+                "ORDER BY r.code ";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("codeInsee", codeInsee);
+        return template.query(sql, param, zonePPRNRowMapper);
+    }
+
     public byte[] tileFor(TilePath tilePath) {
         String sql = "WITH mvtgeom AS " +
                 "( " +
