@@ -1,7 +1,7 @@
 package com.example.demo.repositories.data;
 
 import com.example.demo.models.data.DataProvider;
-import com.example.demo.repositories.mappers.data.DataProviderMapper;
+import com.example.demo.mappers.data.DataProviderMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

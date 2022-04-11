@@ -20,6 +20,17 @@ public abstract class BaseController {
     }
 
     /**
+     * Gère une réponse HTTP "400 - Bad Request".
+     *
+     * @param response la réponse HTTP à compléter.
+     * @return le payload JSON de la réponse HTTP, contenant le message "Bad Request".
+     */
+    public String badRequest(HttpServletResponse response) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return "{ \"message\": \"Bad Request\" }";
+    }
+
+    /**
      * Gère la réponse HTTP pour retourner une chaine de caractères optionnelle.
      * La réponse HTTP est "200 - OK" si le contenu est présent, et "404 - Nout Found" si le contenu est vide.
      *

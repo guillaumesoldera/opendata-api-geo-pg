@@ -1,8 +1,5 @@
 package com.example.demo.models.tiles;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TilePath {
     public final int x;
     public final int y;
@@ -43,6 +40,7 @@ public class TilePath {
         public final Double ymin;
         public final Double ymax;
         public static final int DENSIFY_FACTOR = 4;
+
         Envelope(Double xmin, Double xmax, Double ymin, Double ymax) {
             this.xmin = xmin;
             this.xmax = xmax;
@@ -51,7 +49,7 @@ public class TilePath {
         }
 
         public double segmentSize() {
-            return (xmax - xmin)/DENSIFY_FACTOR;
+            return (xmax - xmin) / DENSIFY_FACTOR;
         }
 
         @Override

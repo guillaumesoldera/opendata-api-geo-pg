@@ -1,12 +1,11 @@
 package com.example.demo.repositories.data;
 
 import com.example.demo.models.data.DataProvider;
-import com.example.demo.repositories.mappers.data.DataProviderMapper;
+import com.example.demo.mappers.data.DataProviderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

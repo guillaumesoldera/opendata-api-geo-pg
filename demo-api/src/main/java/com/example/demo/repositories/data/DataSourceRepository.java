@@ -1,7 +1,7 @@
 package com.example.demo.repositories.data;
 
 import com.example.demo.models.data.DataSource;
-import com.example.demo.repositories.mappers.data.DataSourceMapper;
+import com.example.demo.mappers.data.DataSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
