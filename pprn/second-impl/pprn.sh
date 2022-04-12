@@ -40,8 +40,8 @@ $geom_latlon = "SRID=4326; ". $geom_latlon .""
 
 echo "end transformation ${date}"
 
-export PGPASSWORD=demopostgis
-export pg_cmd_base="psql -h 192.168.86.52 -p 5400 -U postgres -d demo_devoxx"
+export PGPASSWORD=
+export pg_cmd_base="psql -h localhost -p 5432 -U demo_devoxx_user -d demo_devoxx"
 
 cd ../..
 echo "creation schemas without index ${date}"

@@ -34,8 +34,8 @@ echo "COMMIT TRANSACTION;" >> output/zone_pprn_17.sql
 
 echo "end SQL generation ${date}"
 
-export PGPASSWORD=demopostgis
-export pg_cmd_base="psql -h localhost -p 5432 -d demo_postgis -U demo_postgis_user"
+export PGPASSWORD=
+export pg_cmd_base="psql -h localhost -p 5432 -d demo_devoxx -U demo_devoxx_user"
 
 echo "creation schemas ${date}"
 file=../schemas/up.sql
