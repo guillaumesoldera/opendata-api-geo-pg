@@ -44,21 +44,6 @@ public class TilesController {
     }
 
     private boolean tileIsValid(TilePath tilePath) {
-        /*
-        # Do we have all keys we need?
-        # Do the tile x/y coordinates make sense at this zoom level?
-        def tileIsValid(self, tile):
-            if not ('x' in tile and 'y' in tile and 'zoom' in tile):
-                return False
-            if 'format' not in tile or tile['format'] not in ['pbf', 'mvt']:
-                return False
-            size = 2 ** tile['zoom'];
-            if tile['x'] >= size or tile['y'] >= size:
-                return False
-            if tile['x'] < 0 or tile['y'] < 0:
-                return False
-            return True
-         */
         if (tilePath.zoom < 0 || tilePath.x < 0 || tilePath.y < 0) {
             return false;
         }
