@@ -4,7 +4,7 @@ test('GET /v1/data/sources', async () => {
     const response = await request.get('/v1/data/sources');
 
     expect(response.status).toBe(200);
-    expect(response.body.length > 0).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
 });
 
 test('GET /v1/data/sources/xxx', async () => {
