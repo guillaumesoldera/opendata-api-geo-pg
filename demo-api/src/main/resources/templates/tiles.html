@@ -8,14 +8,20 @@
             crossorigin=""></script>
     <script src="/tiles/javascripts/Leaflet.VectorGrid.bundled.js"></script>
     <style>
-        #map {
+        body {
+            display: flex;
+            justify-content: space-around;
+        }
+        #map-tiles, #map-geojson {
             height: 500px;
-            width: 800px;
+            width: 45%;
         }
     </style>
 </head>
 <body>
-    <div id="map"></div>
+    <div id="map-tiles"></div>
+    <div id="map-geojson"></div>
     <script src="/tiles/javascripts/tiles.js"></script>
+    <script src="/tiles/javascripts/mapGeojson.js"></script>
 </body>
 </html>

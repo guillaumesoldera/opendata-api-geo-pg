@@ -14,7 +14,7 @@ var vectorStyles = {
 
 var openMapTilesLayer = L.vectorGrid.protobuf(openmaptilesUrl, {
     vectorTileLayerStyles: vectorStyles,
-    attribution: '© OpenStreetMap contributors, © Georisques',
+    attribution: '© Georisques',
 });
 
 var tileLayer = L.tileLayer(
@@ -24,7 +24,7 @@ var tileLayer = L.tileLayer(
     }
 )
 
-var map = L.map('map').setView([46.1620459, -1.211493], 13);
+var map = L.map('map-tiles').setView([46.1620459, -1.211493], 13);
 
 tileLayer.addTo(map)
 openMapTilesLayer.addTo(map)
