@@ -1,0 +1,34 @@
+{
+"folders": [
+{
+"path": "demo-postgis"
+},
+{
+"path": "demo-mlr"
+},
+{
+"path": "demo-precision"
+}
+],
+"settings": {
+"editor.cursorWidth": 1,
+"terminal.integrated.cursorStyle": "block",
+"editor.fontSize": 24,
+"workbench.colorCustomizations": {
+"editor.lineHighlightBackground": "#dfc9c9",
+},
+"workbench.colorTheme": "Default Light+",
+"sqltools.connections": [
+    {
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "DEMO_POSTGIS",
+        "database": "demo_postgis",
+        "username": "demo_postgis_user",
+        "password": ""
+    }
+]
+}
+}
