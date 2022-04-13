@@ -198,7 +198,7 @@ FROM features f;
 with espaces_verts_with_arr AS (
     select distinct ev.nom_ev, c_ar
     from espaces_verts ev
-             inner join arrondissements a ON ST_Intersects(ev.geom_latlon, a.geom_latlon)
+    inner join arrondissements a ON ST_Intersects(ev.geom_latlon, a.geom_latlon)
 )
 select ev.nom_ev, count(*)
 from espaces_verts_with_arr ev
