@@ -1,3 +1,26 @@
+-- création de tables (avec et sans la précision sur le type de geometry et le SRID)
+
+CREATE TABLE airports (
+  code VARCHAR(3),
+  geom GEOMETRY
+);
+-- insertions (avec et sans SRID pour voir l'impact de la contrainte à la création de la table)
+INSERT INTO airports VALUES (
+    'LAX', 
+    'SRID=4326;POINT(-118.4079 33.9434)'
+);
+INSERT INTO airports
+VALUES (
+      'CDG',
+      ST_SetSRID(
+          ST_GeomFromGeoJSON(
+              '{"type": "Point", "coordinates": [2.5559, 49.0083]}'
+          ),
+          4326
+      )
+);
+
+
 -- specific TABLES
 select *
 from geometry_columns;
@@ -77,7 +100,7 @@ from arrondissements
 ORDER by surface_km2 desc;
 
 
--- ST_Length
+-- ST_Perimeter
 -- l'arrondissement avec le plus grand périmètre
 select c_ar, l_ar, l_aroff, ST_Perimeter(ST_Transform(geom_latlon, 2154)) / 1000 as perimetre_km
 from arrondissements
@@ -101,7 +124,17 @@ where mode = 'Metro' AND ST_DWithin(ST_Transform(geom_latlon, 2154),ST_Transform
 -- autre façon de faire (ST_Buffer, ST_MakePoint et cast en geography pour bien avoir des mètres)
 select *
 from gares
-where mode = 'Metro' AND ST_Intersects(geom_latlon, ST_Buffer(ST_SetSRID(ST_MakePoint(2.282412153722246, 48.878653091848705),4326)::geography, 200)::geometry);
+where mode = 'Metro' AND 
+    ST_Intersects(
+        geom_latlon,
+        ST_Buffer(
+            ST_SetSRID(
+                ST_MakePoint(2.282412153722246, 48.878653091848705)
+                ,4326
+            )::geography
+            , 200
+        )::geometry
+);
 
 -- dans quel arrondissement se trouve le palais des congrès
 select l_ar, l_aroff, c_ar
