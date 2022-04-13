@@ -193,7 +193,6 @@ SELECT json_build_object(
            )
 FROM features f;
 
-
 -- INDEX
 -- espaces verts qui intersectent plusieurs arrondissements (25 résultats env. 400ms)
 with espaces_verts_with_arr AS (
@@ -211,7 +210,7 @@ having count(*) > 1;
 with espaces_verts_with_arr AS (
     select distinct ev.nom_ev, c_ar
     from espaces_verts ev
-             inner join arrondissements a ON ev.geom_latlon && a.geom_latlon
+    inner join arrondissements a ON ev.geom_latlon && a.geom_latlon
 )
 select ev.nom_ev, count(*)
 from espaces_verts_with_arr ev
