@@ -11,6 +11,7 @@
 }
 ],
 "settings": {
+"editor.cursorStyle": "block",
 "editor.cursorWidth": 1,
 "terminal.integrated.cursorStyle": "block",
 "editor.fontSize": 24,
